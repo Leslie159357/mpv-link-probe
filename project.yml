@@ -6,7 +6,7 @@ options:
 packages:
   KSPlayer:
     url: https://github.com/kingslay/KSPlayer.git
-    branch: develop
+    branch: main
 targets:
   MediaProbe:
     type: application
