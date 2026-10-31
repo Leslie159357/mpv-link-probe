@@ -1,0 +1,23 @@
+name: MediaProbe
+options:
+  bundleIdPrefix: xyz.1122275
+  deploymentTarget:
+    iOS: "17.0"
+packages:
+  KSPlayer:
+    url: https://github.com/kingslay/KSPlayer.git
+    branch: develop
+targets:
+  MediaProbe:
+    type: application
+    platform: iOS
+    sources: [Sources]
+    dependencies:
+      - package: KSPlayer
+        product: KSPlayer
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: xyz.1122275.mediaprobe
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        CODE_SIGNING_ALLOWED: NO

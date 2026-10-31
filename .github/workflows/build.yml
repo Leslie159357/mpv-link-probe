@@ -1,0 +1,52 @@
+name: ios-unsigned-ipa
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Archive (unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project MediaProbe.xcodeproj \
+            -scheme MediaProbe \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/MediaProbe.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            -quiet
+
+      - name: Package IPA
+        run: |
+          APP="$RUNNER_TEMP/MediaProbe.xcarchive/Products/Applications/MediaProbe.app"
+          ls -la "$(dirname "$APP")"
+          mkdir -p "$RUNNER_TEMP/Payload"
+          cp -R "$APP" "$RUNNER_TEMP/Payload/"
+          cd "$RUNNER_TEMP" && zip -qry MediaProbe-unsigned.ipa Payload
+          shasum -a 256 MediaProbe-unsigned.ipa
+          du -h MediaProbe-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MediaProbe-ipa
+          path: ${{ runner.temp }}/MediaProbe-unsigned.ipa
+          if-no-files-found: error
