@@ -1,5 +1,4 @@
 import SwiftUI
-import KSPlayer
 
 @main
 struct MediaProbeApp: App {
@@ -7,16 +6,11 @@ struct MediaProbeApp: App {
 }
 
 struct ContentView: View {
-    @State private var info = "linking..."
     var body: some View {
         VStack(spacing: 12) {
-            Text("KSPlayer linked").font(.title2.bold())
-            Text(info).font(.caption).foregroundStyle(.secondary)
+            Text("MPVKit linked").font(.title2.bold())
+            Text("libmpv + ffmpeg + libass + libplacebo + libdovi").font(.caption)
         }
         .padding()
-        .onAppear {
-            KSOptions.secondPlayerType = KSMEPlayer.self
-            info = "second engine = \(KSOptions.secondPlayerType)"
-        }
     }
 }
