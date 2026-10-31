@@ -7,13 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
-      - name: Show toolchain
+      - name: Show toolchain (list Xcodes)
         run: |
+          ls /Applications | grep -i xcode || true
           xcodebuild -version
           xcrun --sdk iphoneos --show-sdk-version
 
